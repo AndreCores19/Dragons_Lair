@@ -27,4 +27,6 @@ add_executable(Dragons_Lair main.cpp
         FireDragon.h
         PoisonDragon.cpp
         PoisonDragon.h
+        Bitacora.cpp
+        Bitacora.h
 )
