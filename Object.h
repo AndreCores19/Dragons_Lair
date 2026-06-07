@@ -2,7 +2,7 @@
 #ifndef DRAGONS_LAIR_OBJECT_H
 #define DRAGONS_LAIR_OBJECT_H
 #include "Entity.h"
-//hola
+
 class Character;
 class Object : public Entity {
 protected:

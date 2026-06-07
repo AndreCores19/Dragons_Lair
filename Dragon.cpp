@@ -1,6 +1,6 @@
 
 #include "Dragon.h"
-//hola
+
 Dragon::Dragon(string name, double life, int maxLife, int level, string region)
     : Character(name, life, maxLife, level), region(region) {}
 

@@ -3,7 +3,6 @@
 #ifndef DRAGONS_LAIR_DRAGON_H
 #define DRAGONS_LAIR_DRAGON_H
 #include "Character.h"
-//hola
 class Dragon : public Character {
 protected:
     string region;

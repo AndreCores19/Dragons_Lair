@@ -16,4 +16,11 @@ add_executable(Dragons_Lair main.cpp
         InvalidFormat.h
         Reader.cpp
         Reader.h
+        Object.h
+        Hunter.cpp
+        Object.cpp
+        Dragon.h
+        Dragon.cpp
+        Entity.cpp
+        Character.cpp
 )
