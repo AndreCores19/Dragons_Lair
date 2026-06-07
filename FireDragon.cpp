@@ -6,12 +6,12 @@ FireDragon::FireDragon(string name, double life, int maxLife, int level, string 
 FireDragon::~FireDragon() {}
 
 double FireDragon::calculateDamage() const {
-    return 20.0 + (temperature / 10.0);
+    return 20.0 + (temperature / 10.0); //base damage: 20 + 1 damage per 10 degrees of temperature
 }
 void FireDragon::specialAbility(Character* target) {
     if (target == nullptr || !target->isAlive())
         return;
-    double burnDamage = temperature * 0.15;
+    double burnDamage = temperature * 0.15; //additional damage to the normal attack
     target->takeDamage(burnDamage);
     cout << name << " breathes fire! " << target->getName() << " burns for " << burnDamage << " damage!\n";
 }

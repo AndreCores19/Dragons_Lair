@@ -6,12 +6,12 @@ PoisonDragon::PoisonDragon(string name, double life, int maxLife, int level, str
 PoisonDragon::~PoisonDragon() {}
 
 double PoisonDragon::calculateDamage() const {
-    return 15.0 + toxicity + poisonStacks;
+    return 15.0 + toxicity + poisonStacks; //base damage: 15 + toxicity + poison stacks
 }
 void PoisonDragon::specialAbility(Character* target) {
     if (target == nullptr || !target->isAlive())
         return;
-    poisonStacks += toxicity * 0.2;
+    poisonStacks += toxicity * 0.2; //poisonStacks goes up and accumulates poison for future turns
     double poisonDamage = poisonStacks;
     target->takeDamage(poisonDamage);
     cout << name << " releases a toxic cloud! " << target->getName() << " is poisoned for " << poisonDamage << " damage! (stacks: " << poisonStacks << ")\n";

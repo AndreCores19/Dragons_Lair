@@ -17,7 +17,7 @@ int Character::getLevel() const {
 }
 void Character::attack(Character* target) {
     if (target == nullptr || !target->isAlive()) return;
-    double dmg = calculateDamage();  // cada subclase define cuánto
+    double dmg = calculateDamage();  //each subclass defines how much
     target->takeDamage(dmg);
 }
 void Character::takeDamage(double dmg) {
