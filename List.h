@@ -14,17 +14,18 @@ class List {
 public:
     List();
     ~List();
-    List(const List& other);           // constructor de copia
-    List& operator=(const List& other); // operador de asignación
-    void push_back(const T& value);
+    List(const List&);           // constructor de copia
+    List& operator=(const List&); // operador de asignación
+    void push_back(const T&);
     void pop_back();
-    T& at(int index);
-    const T& at(int index) const;
+    T& at(int);
+    const T& at(int) const;
     T* begin();
     T* end();
     int getSize() const;
     int getCapacity() const;
 };
+
 
 
 #endif //DRAGONS_LAIR_LIST_H
