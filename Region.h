@@ -5,13 +5,32 @@
 #ifndef DRAGONS_LAIR_REGION_H
 #define DRAGONS_LAIR_REGION_H
 #include <iostream>
+#include <list>
+
+#include "List.h"
 using namespace std;
 
 class Region {
     string name;
     string description;
     bool visited;
-    //conections
+    List<string> connections;
+    //List<Dragon*> dragons;
+    //List<Object*> objects;
+public:
+    Region(string, string);
+    ~Region();
+    void addConnection(string);
+    //void addDragon(Dragon* dragon);
+    //void addObjet(Objeto* objeto);
+    void isVisited();
+    string getName() const;
+    string getDescription() const;
+    const List<string>& getConnections() const;
+    //List<Dragon*>& getDragons() const;
+    //List<Object*>& getObjects() const;
+    //Object* removeObject(int);
+    bool hasBoss();
 };
 
 
