@@ -23,4 +23,8 @@ add_executable(Dragons_Lair main.cpp
         Dragon.cpp
         Entity.cpp
         Character.cpp
+        FireDragon.cpp
+        FireDragon.h
+        PoisonDragon.cpp
+        PoisonDragon.h
 )
