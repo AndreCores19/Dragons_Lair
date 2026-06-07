@@ -51,3 +51,7 @@ bool World::connectionExists(string a, string b) {
     }
     return false; // the region does not exist
 }
+
+void World::addRegion(Region* region) {
+    regions.push_back(region);
+}

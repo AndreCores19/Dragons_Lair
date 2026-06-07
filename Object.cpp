@@ -4,15 +4,13 @@
 
 #include "Object.h"
 
-Object::Object(string name, int value, double weight)
-    : Entity(name), value(value), weight(weight) {}
+Object::Object(string name, int value)
+    : Entity(name), value(value) {}
 
 Object::~Object() {}
 
 int Object::getValue() const {
     return value;
 }
-double Object::getWeight() const {
-    return weight;
-}
+
 

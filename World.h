@@ -17,6 +17,7 @@ public:
     Region* getCurrentRegion() const;
     bool moveHunter(string);
     bool connectionExists(string, string);
+    void addRegion(Region*);
 };
 
 

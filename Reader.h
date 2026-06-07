@@ -14,11 +14,11 @@ using namespace std;
 
 class Reader {
 public:
-    static void readRegions(const string&);
+    static World* readRegions(const string&);
     static void readDragons(const string&, World*);
     static void readObjects(const string&, World*);
     static Hunter* readHunter(const string&);
-    string trim(const string&);
+    static string trim(const string&);
 };
 
 

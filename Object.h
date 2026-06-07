@@ -7,12 +7,10 @@ class Character;
 class Object : public Entity {
 protected:
     int value;
-    double weight;
 public:
-    Object(string, int, double);
+    Object(string, int);
     virtual ~Object();
     int getValue() const;
-    double getWeight() const;
     virtual void use(Character*) = 0;
 };
 

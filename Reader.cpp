@@ -4,7 +4,7 @@
 
 #include "Reader.h"
 
-void Reader::readRegions(const string& route) {
+World* Reader::readRegions(const string& route) {
     ifstream file(route);
     if (!file.is_open()) {
         throw FileNotFound(route);
@@ -13,7 +13,7 @@ void Reader::readRegions(const string& route) {
     string line;
     List<string> connections;
 
-    getline(file, line);
+    getline(file, line); // skip header
 
     while (getline(file, line)) {
         stringstream ss(line);
@@ -23,16 +23,57 @@ void Reader::readRegions(const string& route) {
         getline(ss, connectionStr);
 
         Region* r = new Region(trim(name), trim(description));
+        stringstream sc(connectionStr);
+        string connect;
+        while (getline(sc, connect, ','))
+            r->addConnection(trim(connect));
 
+        world->addRegion(r);
+    }
+    file.close();
+    return world;
+}
+
+void Reader::readDragons(const string& route, World* world) {
+    ifstream file(route);
+    if (!file.is_open()) {
+        throw FileNotFound(route);
+    }
+    string line;
+    getline(file, line); // skip header
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string name, type, HpStr, damageStr, region;
+        getline(ss, type,    '|');
+        getline(ss, name,  '|');
+        getline(ss, HpStr, '|');
+        getline(ss, damageStr, '|');
+        getline(ss, region);
+
+        type = trim(type);
+        name = trim(name);
+        region = trim(region);
+        int hp = stoi(trim(HpStr));
+        int damage = stoi(trim(damageStr));
+
+        //Dragon *dragon = DragonFactory::create(type, name, hp, damage, region);
+        //world->addDragonToRegion(region, dragon);
     }
 
 }
 
-void Reader::readDragons(const string& route, World* world) {
-
-}
-
 void Reader::readObjects(const string& route, World* world) {
+    ifstream file(route);
+    if (!file.is_open()) {
+        throw FileNotFound(route);
+    }
+    string line;
+    getline(file, line); //skip header
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string type, name, valueStr, Str, region;
+    }
 
 }
 
