@@ -8,7 +8,7 @@ private:
     double poisonStacks;
 public:
     PoisonDragon(string, double, int, int, string, double);
-    ~PoisonDragon();
+    ~PoisonDragon() override;
     double calculateDamage() const override;
     void specialAbility(Character*) override;
     void describe() const override;

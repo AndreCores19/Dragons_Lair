@@ -8,7 +8,7 @@ private:
     double temperature;
 public:
     FireDragon(string, double, int, int, string, double);
-    ~FireDragon();
+    ~FireDragon() override;
     double calculateDamage() const override;
     void specialAbility(Character*) override;
     void describe() const override;
