@@ -2,7 +2,9 @@
 #include "Dragon.h"
 
 Dragon::Dragon(string name, double life, int maxLife, int level, string region)
-    : Character(name, life, maxLife, level), region(region) {}
+    : Character(name, life, maxLife, level), region(region) {
+    isBoss = false;
+}
 
 Dragon::~Dragon() {}
 
@@ -15,5 +17,9 @@ void Dragon::describe() const {
     cout << "  Life   : " << life << " / " << maxLife << "\n";
     cout << "  Region : " << region << "\n";
     cout << "  Status : " << (isAlive() ? "Alive" : "Defeated") << "\n";
+}
+
+bool Dragon::GetIsBoss() const {
+    return isBoss;
 }
 
