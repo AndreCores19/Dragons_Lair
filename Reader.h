@@ -4,8 +4,10 @@
 
 #ifndef DRAGONS_LAIR_READER_H
 #define DRAGONS_LAIR_READER_H
+#include <sstream>
 #include "World.h"
 //#include "Hunter.h"
+using namespace std;
 
 class Reader {
 public:
