@@ -1,5 +1,5 @@
 #include "List.h"
-
+//hola
 template <typename T>
 List<T>::List() {
     data = nullptr;

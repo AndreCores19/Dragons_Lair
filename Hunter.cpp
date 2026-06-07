@@ -1,7 +1,7 @@
 #include "Hunter.h"
 #include "Weapon.h"
 #include "Potion.h"
-
+//hola
 Hunter::Hunter(string name, double life, int maxLife, int level, int gold)
     : Character(name, life, maxLife, level), gold(gold), experience(0) {}
 

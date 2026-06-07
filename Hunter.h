@@ -7,7 +7,7 @@
 #include "Character.h"
 #include "Object.h"
 #include "List.h"
-
+//hola
 class Hunter : public Character {
 private:
     List<Object*> inventory;

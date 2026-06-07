@@ -1,7 +1,7 @@
 #ifndef DRAGONS_LAIR_CHARACTER_H
 #define DRAGONS_LAIR_CHARACTER_H
 #include "Entity.h"
-
+//hola
 class Character : public Entity {
 protected:
     double life;

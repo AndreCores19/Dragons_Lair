@@ -1,6 +1,6 @@
 
 #include "Character.h"
-
+//hola
 Character::Character(string name, double life, int maxLife, int level)
     : Entity(name), life(life), maxLife(maxLife), level(level) {}
 

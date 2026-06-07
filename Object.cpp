@@ -6,7 +6,7 @@
 
 Object::Object(string name, int value, double weight)
     : Entity(name), value(value), weight(weight) {}
-
+//hola
 Object::~Object() {}
 
 int Object::getValue() const {
