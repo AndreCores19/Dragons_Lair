@@ -1,7 +1,3 @@
-//
-// Created by andre on 3/6/2026.
-//
-
 #include "List.h"
 
 template <typename T>
@@ -95,4 +91,15 @@ int List<T>::getSize() const {
 template <typename T>
 int List<T>::getCapacity() const {
     return capacity;
+}
+
+template <typename T>
+void List<T>::removeAt(int index) {
+    if (index < 0 || index >= size)
+        throw std::out_of_range("Index out of bounds");
+
+    for (int i = index; i < size - 1; i++)
+        data[i] = data[i + 1];
+
+    size--;
 }

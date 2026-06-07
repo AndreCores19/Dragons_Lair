@@ -1,7 +1,3 @@
-//
-// Created by andre on 3/6/2026.
-//
-
 #ifndef DRAGONS_LAIR_LIST_H
 #define DRAGONS_LAIR_LIST_H
 #include <iostream>
@@ -24,6 +20,7 @@ public:
     T* end();
     int getSize() const;
     int getCapacity() const;
+    void removeAt(int index);
 };
 
 

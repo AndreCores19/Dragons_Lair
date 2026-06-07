@@ -10,4 +10,14 @@ add_executable(Dragons_Lair main.cpp
         Region.h
         List.cpp
         List.h
+        Entity.cpp
+        Entity.h
+        Character.cpp
+        Character.h
+        Object.cpp
+        Object.h
+        Hunter.cpp
+        Hunter.h
+        Dragon.cpp
+        Dragon.h
 )
