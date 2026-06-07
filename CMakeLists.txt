@@ -8,16 +8,12 @@ add_executable(Dragons_Lair main.cpp
         World.h
         Region.cpp
         Region.h
-        List.cpp
         List.h
-        Entity.cpp
-        Entity.h
-        Character.cpp
-        Character.h
-        Object.cpp
-        Object.h
-        Hunter.cpp
-        Hunter.h
-        Dragon.cpp
-        Dragon.h
+        BaseError.cpp
+        BaseError.h
+        OutOfRangeError.h
+        FileNotFound.h
+        InvalidFormat.h
+        Reader.cpp
+        Reader.h
 )
