@@ -22,6 +22,7 @@ public:
     void addRegion(Region*);
     void addDragonToRegion(const string&, Dragon*);
     void addObjectToRegion(const string&, Object*);
+    void addVillagerToRegion(const string&, Villager*);
 };
 
 

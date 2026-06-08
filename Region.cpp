@@ -30,6 +30,10 @@ void Region::addObject(Object* object) {
     objects.push_back(object);
 }
 
+void Region::addVillager(Villager* villager) {
+    villagers.push_back(villager);
+}
+
 void Region::isVisited() {
     visited = true;
 }
@@ -52,6 +56,10 @@ const List<Dragon*>& Region::getDragons() const {
 
 const List<Object*>& Region::getObjects() const {
     return objects;
+}
+
+const List<Villager*>& Region::getVillagers() {
+    return villagers;
 }
 
 bool Region::hasBoss() {

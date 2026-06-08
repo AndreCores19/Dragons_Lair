@@ -137,6 +137,66 @@ Hunter* Reader::readHunter(const string& route) {
 
 }
 
+void Reader::readVillagers(const string& route, World* world) {
+    ifstream file(route);
+    if (!file.is_open())
+        throw FileNotFound(route);
+
+    string line;
+    getline(file, line); // skip header
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string name, dialog, region, itemsStr;
+        getline(ss, name,     '|');
+        getline(ss, dialog,   '|');
+        getline(ss, region,   '|');
+        getline(ss, itemsStr);
+
+        name = trim(name);
+        dialog = trim(dialog);
+        region = trim(region);
+        itemsStr = trim(itemsStr);
+
+        Villager* villager = new Villager(name, dialog);
+
+        // parsear cada item separado por ;
+        stringstream si(itemsStr);
+        string itemStr;
+        while (getline(si, itemStr, ';')) {
+            itemStr = trim(itemStr);
+            if (itemStr.empty()) continue;
+
+            stringstream si2(itemStr);
+            string type, itemName, valueStr, extraStr;
+            getline(si2, type,     ',');
+            getline(si2, itemName, ',');
+            getline(si2, valueStr, ',');
+            getline(si2, extraStr);
+
+            type = trim(type);
+            itemName = trim(itemName);
+            int value = stoi(trim(valueStr));
+            double extra = stod(trim(extraStr));
+
+            Object* obj = nullptr;
+            if (type == "weapon")
+                obj = new Weapon(itemName, value, extra);
+            else if (type == "potion")
+                obj = new Potion(itemName, value, extra);
+            else if (type == "armor")
+                obj = new Armor(itemName, value, extra);
+            else
+                throw InvalidFormat("Unknown object type: " + type);
+
+            villager->addItem(obj);
+        }
+
+        world->addVillagerToRegion(region, villager);
+    }
+    file.close();
+}
+
 string Reader::trim(const string& s) {
     int start = s.find_first_not_of(" \t\r\n");
     int end = s.find_last_not_of(" \t\r\n");

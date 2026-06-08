@@ -75,3 +75,13 @@ void World::addObjectToRegion(const string& regionName, Object* obj) {
     }
     throw InvalidFormat("Region not found: " + regionName);
 }
+
+void World::addVillagerToRegion(const string& regionName, Villager* vil) {
+    for (int i = 0; i < regions.getSize(); i++) {
+        if (regions.at(i)->getName() == regionName) {
+            regions.at(i)->addVillager(vil);
+            return;
+        }
+    }
+    throw InvalidFormat("Region not found: " + regionName);
+}

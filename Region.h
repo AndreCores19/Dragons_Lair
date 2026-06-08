@@ -7,7 +7,7 @@
 #include <iostream>
 #include "List.h"
 #include "Dragon.h"
-#include "Hunter.h"
+#include "Villager.h"
 using namespace std;
 
 class Region {
@@ -17,18 +17,21 @@ class Region {
     List<string> connections;
     List<Dragon*> dragons;
     List<Object*> objects;
+    List<Villager*> villagers;
 public:
     Region(string, string);
     ~Region();
     void addConnection(string);
     void addDragon(Dragon* dragon);
     void addObject(Object* object);
+    void addVillager(Villager* villager);
     void isVisited();
     string getName() const;
     string getDescription() const;
     const List<string>& getConnections() const;
     const List<Dragon*>& getDragons() const;
     const List<Object*>& getObjects() const;
+    const List<Villager*>& getVillagers();
     Object* removeObject(int);
     bool hasBoss();
 };
