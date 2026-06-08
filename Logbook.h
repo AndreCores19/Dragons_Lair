@@ -10,14 +10,14 @@
 #include "FileNotFound.h"
 using namespace std;
 
-class Bitacora {
+class Logbook {
 private:
     ofstream archivo;
     string ruta;
     int turnoActual;
 
 public:
-    Bitacora(const string& ruta);
+    Logbook(const string& ruta);
 
     void setTurno(int turno);
     void registrar(const string& msg);

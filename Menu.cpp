@@ -89,8 +89,8 @@ void Menu::iniciarSimulacion() {
     Reader::readObjects(construirRuta("objects.txt"), mundo.get());
 
     unique_ptr<Hunter> cazador(Reader::readHunter(construirRuta("hunter.txt")));
-    unique_ptr<Bitacora> bitacora(new Bitacora("bitacora.txt"));
+    unique_ptr<Logbook> bitacora(new Logbook("bitacora.txt"));
 
-    Simulacion simulacion(mundo.get(), cazador.get(), bitacora.get());
+    Simulation simulacion(mundo.get(), cazador.get(), bitacora.get());
     simulacion.run();
 }

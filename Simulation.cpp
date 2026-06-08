@@ -2,10 +2,10 @@
 // Created by Gerald Quintero on 8/6/26.
 //
 
-#include "Simulacion.h"
+#include "Simulation.h"
 
-Simulacion::Simulacion(World* mundo, Hunter* cazador, Bitacora* bitacora) : mundo(mundo), cazador(cazador), bitacora(bitacora)
-, turnoActual(0), finalizada(false), hydraDerrotada(false){
+Simulation::Simulation(World* mundo, Hunter* cazador, Logbook* bitacora) : mundo(mundo), cazador(cazador), bitacora(bitacora)
+                                                                           , turnoActual(0), finalizada(false), hydraDerrotada(false){
     if (mundo == nullptr) {
         throw BaseError("Simulation received a null world");
     }
@@ -20,7 +20,7 @@ Simulacion::Simulacion(World* mundo, Hunter* cazador, Bitacora* bitacora) : mund
     }
 }
 
-bool Simulacion::esDragonFinal(Dragon *dragon) const {
+bool Simulation::esDragonFinal(Dragon *dragon) const {
     if (dragon == nullptr) {
         return false;
     }
@@ -29,7 +29,7 @@ bool Simulacion::esDragonFinal(Dragon *dragon) const {
 }
 
 
-bool Simulacion::moverASiguienteRegion(Region* regionActual) {
+bool Simulation::moverASiguienteRegion(Region* regionActual) {
     if (regionActual == nullptr) {
         return false;
     }
@@ -48,7 +48,7 @@ bool Simulacion::moverASiguienteRegion(Region* regionActual) {
     return false;
 }
 
-void Simulacion::run() {
+void Simulation::run() {
     cout << "Starting simulation..." << endl;
 
     while (!verificarFinAventura()) {
@@ -59,7 +59,7 @@ void Simulacion::run() {
     cout << "Simulation finished. Final report generated in reporte_final.txt" << endl;
 }
 
-void Simulacion::ejecutarTurno() {
+void Simulation::ejecutarTurno() {
     turnoActual++;
     bitacora->setTurno(turnoActual);
     Region* region = mundo->getCurrentRegion();
@@ -129,7 +129,7 @@ void Simulacion::ejecutarTurno() {
     }
 }
 
-bool Simulacion::verificarFinAventura() {
+bool Simulation::verificarFinAventura() {
     if (finalizada) {
         return true;
     }
@@ -151,7 +151,7 @@ bool Simulacion::verificarFinAventura() {
     return false;
 }
 
-void Simulacion::generarReporte() {
+void Simulation::generarReporte() {
     ofstream reporte("reporte_final.txt", ios::out);
 
     if (!reporte.is_open()) {

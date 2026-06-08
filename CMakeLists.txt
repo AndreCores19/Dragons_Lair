@@ -27,8 +27,8 @@ add_executable(Dragons_Lair main.cpp
         FireDragon.h
         PoisonDragon.cpp
         PoisonDragon.h
-        Bitacora.cpp
-        Bitacora.h
+        Logbook.cpp
+        Logbook.h
         HydraDragon.cpp
         HydraDragon.h
         Weapon.cpp
@@ -42,8 +42,8 @@ add_executable(Dragons_Lair main.cpp
         IceDragon.cpp
         IceDragon.h
         DragonFactory.cpp
-        Simulacion.cpp
-        Simulacion.h
+        Simulation.cpp
+        Simulation.h
         Menu.cpp
         Menu.h
 )

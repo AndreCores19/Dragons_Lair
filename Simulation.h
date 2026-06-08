@@ -10,16 +10,16 @@
 #include <stdexcept>
 #include "World.h"
 #include "Hunter.h"
-#include "Bitacora.h"
+#include "Logbook.h"
 #include "HydraDragon.h"
 #include "BaseError.h"
 using namespace std;
 
-class Simulacion {
+class Simulation {
 private:
     World* mundo;
     Hunter* cazador;
-    Bitacora* bitacora;
+    Logbook* bitacora;
     int turnoActual;
     bool finalizada;
     bool hydraDerrotada;
@@ -27,7 +27,7 @@ private:
     bool moverASiguienteRegion(Region* regionActual);
 
 public:
-    Simulacion(World* mundo, Hunter* cazador, Bitacora* bitacora);
+    Simulation(World* mundo, Hunter* cazador, Logbook* bitacora);
 
     void run();
     void ejecutarTurno();

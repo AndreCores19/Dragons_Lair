@@ -8,8 +8,8 @@
 #include <string>
 #include "FileNotFound.h"
 #include "Reader.h"
-#include "Simulacion.h"
-#include "Bitacora.h"
+#include "Simulation.h"
+#include "Logbook.h"
 using namespace std;
 
 class Menu {
