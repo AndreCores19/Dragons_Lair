@@ -44,21 +44,23 @@ void Reader::readDragons(const string& route, World* world) {
     getline(file, line); // skip header
     while (getline(file, line)) {
         stringstream ss(line);
-        string name, type, HpStr, damageStr, region;
+        string name, type, HpStr, maxHpStr, levelStr, region;
         getline(ss, type,    '|');
         getline(ss, name,  '|');
         getline(ss, HpStr, '|');
-        getline(ss, damageStr, '|');
+        getline(ss, maxHpStr, '|');
+        getline(ss, levelStr, '|');
         getline(ss, region);
 
         type = trim(type);
         name = trim(name);
         region = trim(region);
-        int hp = stoi(trim(HpStr));
-        int damage = stoi(trim(damageStr));
+        int hp = stod(trim(HpStr));
+        int maxHp = stoi(trim(maxHpStr));
+        int level = stoi(trim(levelStr));
 
-        //Dragon *dragon = DragonFactory::create(type, name, hp, damage, region);
-        //world->addDragonToRegion(region, dragon);
+        Dragon *dragon = DragonFactory::createDragon(type, name, hp, maxHp, level, region);
+        world->addDragonToRegion(region, dragon);
     }
 
 }
