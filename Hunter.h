@@ -21,6 +21,7 @@ public:
     void usePotion();
     void addExperience(double);
     void addGold(int);
+    void spendGold(int);
     int getGold() const;
     double getExperience() const;
     void describe() const override;

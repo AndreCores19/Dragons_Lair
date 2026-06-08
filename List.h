@@ -64,6 +64,16 @@ public:
         }
     }
 
+    void removeAt(int index) {
+        if (index < 0 || index >= size)
+            throw OutOfRangeError(index, size);
+
+        for (int i = index; i < size - 1; i++)
+            data[i] = data[i + 1];
+
+        size--;
+    }
+
     T& at(int index) {
         if (index < 0 || index >= size)
             throw OutOfRangeError(index, size);

@@ -56,6 +56,11 @@ void Hunter::addGold(int amount) {
     if (amount < 0) return;
     gold += amount;
 }
+void Hunter::spendGold(int amount) {
+    if (amount < 0) return;
+    gold -= amount;
+    if (gold < 0) gold = 0;
+}
 
 void Hunter::describe() const {
     cout << "  Hunter: " << name << "\n";

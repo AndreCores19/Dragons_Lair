@@ -31,4 +31,12 @@ add_executable(Dragons_Lair main.cpp
         Bitacora.h
         HydraDragon.cpp
         HydraDragon.h
+        Weapon.cpp
+        Weapon.h
+        Potion.cpp
+        Potion.h
+        Armor.cpp
+        Armor.h
+        Villager.cpp
+        Villager.h
 )

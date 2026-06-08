@@ -16,7 +16,12 @@ void Dragon::describe() const {
     cout << "  Level  : " << level << "\n";
     cout << "  Life   : " << life << " / " << maxLife << "\n";
     cout << "  Region : " << region << "\n";
-    cout << "  Status : " << (isAlive() ? "Alive" : "Defeated") << "\n";
+    cout << "  Status : ";
+    if (isAlive()) {
+        cout << "Alive\n";
+    } else {
+        cout << "Defeated\n";
+    }
 }
 
 bool Dragon::GetIsBoss() const {
