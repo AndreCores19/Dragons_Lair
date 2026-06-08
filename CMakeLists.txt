@@ -39,4 +39,6 @@ add_executable(Dragons_Lair main.cpp
         Armor.h
         Villager.cpp
         Villager.h
+        IceDragon.cpp
+        IceDragon.h
 )

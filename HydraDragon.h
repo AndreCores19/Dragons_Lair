@@ -8,7 +8,7 @@ private:
     int heads;
     int maxHeads;
 public:
-    HydraDragon(string, double, int, int, string, int);
+    HydraDragon(string, double, int, int, string);
     ~HydraDragon() override;
     double calculateDamage() const override;
     void specialAbility(Character*) override;

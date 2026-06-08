@@ -1,7 +1,7 @@
 #include "PoisonDragon.h"
 
-PoisonDragon::PoisonDragon(string name, double life, int maxLife, int level, string region, double toxicity)
-    : Dragon(name, life, maxLife, level, region), toxicity(toxicity), poisonStacks(0) {}
+PoisonDragon::PoisonDragon(string name, double life, int maxLife, int level, string region)
+    : Dragon(name, life, maxLife, level, region), toxicity(25.0), poisonStacks(0) {}
 
 PoisonDragon::~PoisonDragon() {}
 

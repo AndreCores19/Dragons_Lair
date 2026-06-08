@@ -1,7 +1,7 @@
 #include "FireDragon.h"
 
-FireDragon::FireDragon(string name, double life, int maxLife, int level, string region, double temperature)
-    : Dragon(name, life, maxLife, level, region), temperature(temperature) {}
+FireDragon::FireDragon(string name, double life, int maxLife, int level, string region)
+    : Dragon(name, life, maxLife, level, region), temperature(200) {}
 
 FireDragon::~FireDragon() {}
 

@@ -7,7 +7,7 @@ class FireDragon : public Dragon {
 private:
     double temperature;
 public:
-    FireDragon(string, double, int, int, string, double);
+    FireDragon(string, double, int, int, string);
     ~FireDragon() override;
     double calculateDamage() const override;
     void specialAbility(Character*) override;

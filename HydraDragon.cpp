@@ -2,8 +2,8 @@
 
 #include "HydraDragon.h"
 
-HydraDragon::HydraDragon(string name, double life, int maxLife, int level, string region, int heads)
-: Dragon(name, life, maxLife, level, region), heads(heads), maxHeads(heads) {}
+HydraDragon::HydraDragon(string name, double life, int maxLife, int level, string region)
+: Dragon(name, life, maxLife, level, region), heads(3), maxHeads(3) {}
 
 HydraDragon::~HydraDragon() {}
 
