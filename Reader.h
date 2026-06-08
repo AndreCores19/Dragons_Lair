@@ -10,6 +10,10 @@
 #include "InvalidFormat.h"
 #include "World.h"
 #include "Hunter.h"
+#include "Armor.h"
+#include "Potion.h"
+#include "Weapon.h"
+#include "DragonFactory.h"
 using namespace std;
 
 class Reader {
@@ -18,6 +22,7 @@ public:
     static void readDragons(const string&, World*);
     static void readObjects(const string&, World*);
     static Hunter* readHunter(const string&);
+private:
     static string trim(const string&);
 };
 

@@ -55,3 +55,23 @@ bool World::connectionExists(string a, string b) {
 void World::addRegion(Region* region) {
     regions.push_back(region);
 }
+
+void World::addDragonToRegion(const string& regionName, Dragon* dra) {
+    for (int i = 0; i < regions.getSize(); i++) {
+        if (regions.at(i)->getName() == regionName) {
+            regions.at(i)->addDragon(dra);
+            return;
+        }
+    }
+    throw InvalidFormat("Region not found: " + regionName);
+}
+
+void World::addObjectToRegion(const string& regionName, Object* obj) {
+    for (int i = 0; i < regions.getSize(); i++) {
+        if (regions.at(i)->getName() == regionName) {
+            regions.at(i)->addObject(obj);
+            return;
+        }
+    }
+    throw InvalidFormat("Region not found: " + regionName);
+}
