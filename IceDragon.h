@@ -4,9 +4,9 @@
 
 class IceDragon : public Dragon {
 private:
-    double temperature;
+    double freezeLevel;
 public:
-    IceDragon(string, double, int, int, string, double);
+    IceDragon(string, double, int, int, string);
     ~IceDragon() override;
     double calculateDamage() const override;
     void specialAbility(Character*) override;

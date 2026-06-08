@@ -15,6 +15,11 @@ int Character::getMaxLife() const {
 int Character::getLevel() const {
     return level;
 }
+
+double Character::getDefense() const {
+    return defense;
+}
+
 void Character::setDefense(double def) {
     if (def < 0) def = 0;
     defense = def;

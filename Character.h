@@ -14,6 +14,7 @@ public:
     double getLife() const;
     int getMaxLife() const;
     int getLevel() const;
+    double getDefense() const;
     void setDefense(double);
     void attack(Character*);
     void takeDamage(double);
