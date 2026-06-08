@@ -21,7 +21,7 @@ void Bitacora::registrar(const string &msg) {
         throw FileNotFound(ruta);
     }
 
-    archivo << "[Turno " << setw(2) << setfill('0') << turnoActual << "] " << msg << endl;
+    archivo << "[Turn " << setw(2) << setfill('0') << turnoActual << "] " << msg << endl;
 }
 
 void Bitacora::cerrar() {

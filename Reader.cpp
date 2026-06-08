@@ -11,6 +11,7 @@ World* Reader::readRegions(const string& route) {
         throw FileNotFound(route);
     }
     World* world = new World();
+    bool primeraRegion = true;
     string line;
     List<string> connections;
 
@@ -28,8 +29,11 @@ World* Reader::readRegions(const string& route) {
         string connect;
         while (getline(sc, connect, ','))
             r->addConnection(trim(connect));
-
         world->addRegion(r);
+        if (primeraRegion) {
+            world->setCurrentRegion(r);
+            primeraRegion = false;
+        }
     }
     file.close();
     return world;
@@ -114,19 +118,19 @@ Hunter* Reader::readHunter(const string& route) {
 
     while (getline(file,line)) {
         if (line.rfind("name:",0) == 0)
-            name = trim(line.substr(7));
+            name = trim(line.substr(5));
 
         else if (line.rfind("health:",0) == 0)
-            health = stod(trim(line.substr(5)));
+            health = stod(trim(line.substr(7)));
 
         else if (line.rfind("maxHealth:",0) == 0)
-            maxHealth = stoi(trim(line.substr(8)));
+            maxHealth = stoi(trim(line.substr(10)));
 
         else if (line.rfind("level:",0) == 0)
             level = stoi(trim(line.substr(6)));
 
         else if (line.rfind("Gold:",0) == 0)
-            gold = stoi(trim(line.substr(4)));
+            gold = stoi(trim(line.substr(5)));
     }
     file.close();
     return new Hunter(name, health, maxHealth, level, gold);

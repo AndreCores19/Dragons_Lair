@@ -6,6 +6,7 @@
 #define DRAGONS_LAIR_BITACORA_H
 #include <fstream>
 #include <string>
+#include <iomanip>
 #include "FileNotFound.h"
 using namespace std;
 

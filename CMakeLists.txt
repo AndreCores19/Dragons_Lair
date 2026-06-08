@@ -42,4 +42,8 @@ add_executable(Dragons_Lair main.cpp
         IceDragon.cpp
         IceDragon.h
         DragonFactory.cpp
+        Simulacion.cpp
+        Simulacion.h
+        Menu.cpp
+        Menu.h
 )

@@ -26,6 +26,10 @@ void Region::addDragon(Dragon* dragon) {
     dragons.push_back(dragon);
 }
 
+void Region::addObject(Object* object) {
+    objects.push_back(object);
+}
+
 void Region::isVisited() {
     visited = true;
 }
@@ -42,6 +46,14 @@ const List<string>& Region::getConnections() const {
     return connections;
 }
 
+const List<Dragon*>& Region::getDragons() const {
+    return dragons;
+}
+
+const List<Object*>& Region::getObjects() const {
+    return objects;
+}
+
 bool Region::hasBoss() {
     for (int i = 0; i < dragons.getSize(); i++) {
         if (dragons.at(i)->GetIsBoss())
@@ -52,5 +64,6 @@ bool Region::hasBoss() {
 
 Object* Region::removeObject(int index) {
     Object* obj = objects.at(index);
+    objects.removeAt(index);
     return obj;
 }
