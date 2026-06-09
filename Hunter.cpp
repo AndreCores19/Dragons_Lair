@@ -28,6 +28,12 @@ double Hunter::calculateDamage() const {
 //Inventory
 void Hunter::pickUp(Object* obj) {
     if (obj == nullptr) return;
+    Potion* potion = dynamic_cast<Potion*>(obj);
+    if (potion != nullptr) {
+        potion->use(this);
+        delete potion;
+        return;
+    }
     inventory.push_back(obj);
 }
 void Hunter::usePotion() {

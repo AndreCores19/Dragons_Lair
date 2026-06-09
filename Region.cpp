@@ -16,6 +16,10 @@ Region::~Region() {
 
     for (int i = 0; i < objects.getSize(); i++)
         delete objects.at(i);
+
+    for (int i = 0; i < villagers.getSize(); i++) {
+        delete villagers.at(i);
+    }
 }
 
 void Region::addConnection(string region) {
@@ -36,6 +40,10 @@ void Region::addVillager(Villager* villager) {
 
 void Region::isVisited() {
     visited = true;
+}
+
+bool Region::wasVisited() const {
+    return visited;
 }
 
 string Region::getName() const {

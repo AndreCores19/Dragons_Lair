@@ -13,6 +13,7 @@
 #include "Logbook.h"
 #include "HydraDragon.h"
 #include "BaseError.h"
+#include "Weapon.h"
 using namespace std;
 
 class Simulation {
@@ -25,6 +26,9 @@ private:
     bool hydraDerrotada;
     bool esDragonFinal(Dragon* dragon) const;
     bool moverASiguienteRegion(Region* regionActual);
+    bool regionHasDragonsAlive(Region* region) const;
+    bool aliveDragonExists() const;
+    void manageVillagers(Region* region);
 
 public:
     Simulation(World* mundo, Hunter* cazador, Logbook* bitacora);

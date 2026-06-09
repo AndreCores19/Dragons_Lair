@@ -26,6 +26,7 @@ public:
     void addObject(Object* object);
     void addVillager(Villager* villager);
     void isVisited();
+    bool wasVisited() const;
     string getName() const;
     string getDescription() const;
     const List<string>& getConnections() const;

@@ -43,6 +43,7 @@ void Menu::solicitarRutas() {
     cout << "- dragons.txt" << endl;
     cout << "- objects.txt" << endl;
     cout << "- hunter.txt" << endl;
+    cout << "- villagers.txt" << endl;
     cout << endl;
 
     cout << "Do you want to change the base path? (y/n): ";
@@ -63,7 +64,8 @@ void Menu::validarArchivos() const {
         "regions.txt",
         "dragons.txt",
         "objects.txt",
-        "hunter.txt"
+        "hunter.txt",
+        "villagers.txt",
     };
 
     for (const string& nombre : archivos) {
@@ -87,6 +89,7 @@ void Menu::iniciarSimulacion() {
     unique_ptr<World> mundo(Reader::readRegions(construirRuta("regions.txt")));
     Reader::readDragons(construirRuta("dragons.txt"), mundo.get());
     Reader::readObjects(construirRuta("objects.txt"), mundo.get());
+    Reader::readVillagers(construirRuta("villagers.txt"), mundo.get());
 
     unique_ptr<Hunter> cazador(Reader::readHunter(construirRuta("hunter.txt")));
     unique_ptr<Logbook> bitacora(new Logbook("bitacora.txt"));

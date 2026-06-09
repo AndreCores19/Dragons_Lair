@@ -28,25 +28,142 @@ bool Simulation::esDragonFinal(Dragon *dragon) const {
     return dragon->GetIsBoss() || dynamic_cast<HydraDragon*>(dragon) != nullptr;
 }
 
-
-bool Simulation::moverASiguienteRegion(Region* regionActual) {
-    if (regionActual == nullptr) {
+bool Simulation::regionHasDragonsAlive(Region *region) const {
+    if (region == nullptr) {
         return false;
     }
 
-    const List<string>& conexiones = regionActual->getConnections();
-    for (int i = 0; i < conexiones.getSize(); i++) {
-        string destino = conexiones.at(i);
-        if (mundo->moveHunter(destino)) {
-            bitacora->registrar("Hunter " + cazador->getName() + " moves to " + destino + ".");
+    const List<Dragon*>& dragons = region->getDragons();
+    for (int i = 0; i < dragons.getSize(); i++) {
+        Dragon* dragon = dragons.at(i);
+
+        if (dragon != nullptr && dragon->isAlive()) {
             return true;
         }
     }
-
-    bitacora->registrar("The hunter" + cazador->getName() + " has no available regions to move to.");
-    finalizada = true;
     return false;
 }
+
+bool Simulation::aliveDragonExists() const {
+    if (mundo == nullptr) {
+        return false;
+    }
+
+    const List<Region*>& regions = mundo->getRegions();
+    for (int i = 0; i < regions.getSize(); i++) {
+        Region* region = regions.at(i);
+
+        if (regionHasDragonsAlive(region)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Simulation::moverASiguienteRegion(Region* regionActual) {
+        if (regionActual == nullptr) {
+            return false;
+        }
+
+        const List<string>& conexiones = regionActual->getConnections();
+
+        for (int i = 0; i < conexiones.getSize(); i++) {
+            string destino = conexiones.at(i);
+            Region* regionDestino = mundo->findRegionByName(destino);
+
+            if (regionDestino != nullptr && !regionDestino->wasVisited()) {
+                if (mundo->moveHunter(destino)) {
+                    bitacora->registrar(
+                        "Hunter " + cazador->getName() + " moves to " + destino + "."
+                    );
+                    return true;
+                }
+            }
+        }
+
+        for (int i = 0; i < conexiones.getSize(); i++) {
+            string destino = conexiones.at(i);
+            Region* regionDestino = mundo->findRegionByName(destino);
+
+            if (regionDestino != nullptr && regionHasDragonsAlive(regionDestino)) {
+                if (mundo->moveHunter(destino)) {
+                    bitacora->registrar(
+                        "Hunter " + cazador->getName() + " returns to " + destino +
+                        " because there are still living dragons."
+                    );
+                    return true;
+                }
+            }
+        }
+
+        if (aliveDragonExists()) {
+            bitacora->registrar(
+                "Hunter " + cazador->getName() +
+                " cannot find a direct path to another living dragon."
+            );
+            finalizada = true;
+            return false;
+        }
+
+        bitacora->registrar(
+            "Hunter " + cazador->getName() +
+            " has defeated all reachable dragons or has no remaining objectives."
+        );
+
+        finalizada = true;
+        return false;
+}
+
+void Simulation::manageVillagers(Region *region) {
+    if (region == nullptr) {
+        return;
+    }
+
+    const List<Villager*>& villagers = region->getVillagers();
+
+    if (villagers.getSize() == 0) {
+        return;
+    }
+
+    for (int i = 0; i < villagers.getSize(); i++) {
+        Villager* villager = villagers.at(i);
+
+        if (villager == nullptr) {
+            continue;
+        }
+
+        bitacora->registrar(
+            "Hunter " + cazador->getName() + " meets villager " +
+            villager->getName() + " in " + region->getName() + "."
+        );
+
+        int goldBefore = cazador->getGold();
+        double lifeBefore = cazador->getLife();
+
+        villager->sell(cazador, 0);
+
+        int goldAfter = cazador->getGold();
+        double lifeAfter = cazador->getLife();
+
+        if (goldAfter < goldBefore) {
+            int price = goldBefore - goldAfter;
+
+            bitacora->registrar(
+                "Hunter " + cazador->getName() + " buys an item from " +
+                villager->getName() + " for " + to_string(price) + " gold."
+            );
+            if (lifeAfter < lifeBefore) {
+                bitacora->registrar("Hunter " + cazador->getName() + " recovers " + to_string((int)lifeAfter - lifeBefore) + " life points after using potion.");
+            }
+        } else {
+            bitacora->registrar(
+                "Hunter " + cazador->getName() + " could not buy an item from " +
+                villager->getName() + "."
+            );
+        }
+    }
+}
+
 
 void Simulation::run() {
     cout << "Starting simulation..." << endl;
@@ -63,6 +180,7 @@ void Simulation::ejecutarTurno() {
     turnoActual++;
     bitacora->setTurno(turnoActual);
     Region* region = mundo->getCurrentRegion();
+    bool primeraVisita = !region->wasVisited();
 
     if (region == nullptr) {
         finalizada = true;
@@ -72,6 +190,9 @@ void Simulation::ejecutarTurno() {
 
     region->isVisited();
     bitacora->registrar("Hunter " + cazador->getName() + " enters " + region->getName() + ".");
+    if (primeraVisita) {
+        manageVillagers(region);
+    }
     List<Dragon*>& dragones = const_cast<List<Dragon*>&>(region->getDragons());
 
     for (int i = 0; i < dragones.getSize(); i++) {
@@ -90,6 +211,11 @@ void Simulation::ejecutarTurno() {
         if (!dragon->isAlive()) {
             bitacora->registrar(dragon->getName() + " was defeated.");
             cazador->addExperience(dragon->getLevel() * 50.0);
+
+            int goldReward = dragon->getLevel() * 25;
+            cazador->addGold(goldReward);
+
+            bitacora->registrar("Hunter " + cazador->getName() + " earns " + to_string(goldReward) + " gold for defeating " + dragon->getName() + ".");
 
             if (esDragonFinal(dragon)) {
                 hydraDerrotada = true;
@@ -113,19 +239,34 @@ void Simulation::ejecutarTurno() {
 
     List<Object*>& objetos = const_cast<List<Object*>&>(region->getObjects());
 
-    while (objetos.getSize() > 0) {
-        Object* objeto = region->removeObject(0);
+    int index = 0;
 
-        if (objeto != nullptr) {
-            cazador->pickUp(objeto);
-            bitacora->registrar(
-                "Hunter " + cazador->getName() + " picks up " + objeto->getName() + "."
-            );
+    while (index < objetos.getSize()) {
+        Object* object = objetos.at(index);
+        if (object == nullptr) {
+            index++;
+            continue;
+        }
+
+        Weapon* weapon = dynamic_cast<Weapon*>(object);
+        if (weapon != nullptr) {
+            Object* objectPicked = region->removeObject(index);
+            cazador->pickUp(objectPicked);
+            bitacora->registrar("Hunter " + cazador->getName() + " picks up weapon " + objectPicked->getName() + ".");
+        }
+        else {
+            bitacora->registrar("Hunter " + cazador->getName() + " ignores " + object->getName() + " because only weapons can be picked up from regions.");
+            index++;
         }
     }
 
     if (!finalizada) {
-        moverASiguienteRegion(region);
+        if (regionHasDragonsAlive(region)) {
+            bitacora->registrar("Hunter " + cazador->getName() + " stays in " + region->getName() + " because there are still living dragons.");
+        }
+        else {
+            moverASiguienteRegion(region);
+        }
     }
 }
 

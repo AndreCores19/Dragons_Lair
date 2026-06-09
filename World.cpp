@@ -21,6 +21,21 @@ Region* World::getCurrentRegion() const {
     return currentRegion;
 }
 
+Region* World::findRegionByName(const string& name) const {
+    for (int i = 0; i < regions.getSize(); i++) {
+        Region* region = regions.at(i);
+
+        if (region != nullptr && region->getName() == name) {
+            return region;
+        }
+    }
+    return nullptr;
+}
+
+const List<Region*>& World::getRegions() const {
+    return regions;
+}
+
 bool World::moveHunter(string destination) {
     // Verify the connection
     if (!connectionExists(currentRegion->getName(), destination))
