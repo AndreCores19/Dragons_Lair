@@ -165,10 +165,9 @@ void Simulation::manageVillagers(Region *region) {
             int price = goldBefore - goldAfter;
 
             bitacora->registrar(
-                "Hunter " + cazador->getName() + " buys an item from " +
-                villager->getName() + " for " + to_string(price) + " gold."
+                "Hunter " + cazador->getName() + " buys an item from " + villager->getName() + " for " + to_string(price) + " gold."
             );
-            if (lifeAfter < lifeBefore) {
+            if (lifeAfter > lifeBefore) {
                 bitacora->registrar("Hunter " + cazador->getName() + " recovers " + to_string((int)lifeAfter - lifeBefore) + " life points after using potion.");
             }
         } else {
@@ -197,7 +196,7 @@ void Simulation::run() {
     }
     generarReporte();
     bitacora->cerrar();
-    cout << "Simulation finished. Final report generated in reporte_final.txt" << endl;
+    cout << "Simulation finished. Final report generated in final_report.txt" << endl;
 }
 
 void Simulation::ejecutarTurno() {
@@ -238,7 +237,13 @@ void Simulation::ejecutarTurno() {
 
         if (!dragon->isAlive()) {
             bitacora->registrar(dragon->getName() + " was defeated.");
+            int levelBefore = cazador->getLevel();
+
             cazador->addExperience(dragon->getLevel() * 50.0);
+
+            if (cazador->getLevel() > levelBefore) {
+                bitacora->registrar("Hunter levels up! - Maximum life increased by 20");
+            }
 
             int goldReward = dragon->getLevel() * 25;
             cazador->addGold(goldReward);
@@ -327,10 +332,10 @@ bool Simulation::verificarFinAventura() {
 }
 
 void Simulation::generarReporte() {
-    ofstream reporte("reporte_final.txt", ios::out);
+    ofstream reporte("final_report.txt", ios::out);
 
     if (!reporte.is_open()) {
-        throw BaseError("Could not create reporte_final.txt.");
+        throw BaseError("Could not create final_report.txt.");
     }
 
     reporte << "===== FINAL REPORT - DRAGON'S LAIR =====" << endl;

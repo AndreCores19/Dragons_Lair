@@ -1,6 +1,7 @@
 #include "Hunter.h"
 #include "Weapon.h"
 #include "Potion.h"
+#include "Armor.h"
 
 Hunter::Hunter(string name, double life, int maxLife, int level, int gold)
     : Character(name, life, maxLife, level), gold(gold), experience(0) {}
@@ -18,12 +19,15 @@ double Hunter::getExperience() const {
 }
 double Hunter::calculateDamage() const {
     double base = 10.0 + level * 2.0;
+    double bestWeaponDamage = 0.0;
+
     for (int i = 0; i < inventory.getSize(); i++) {
         Weapon* weapon = dynamic_cast<Weapon*>(inventory.at(i));
-        if (weapon != nullptr)
-            return base + weapon->getDamage();
+        if (weapon != nullptr && weapon->getDamage() > bestWeaponDamage) {
+            bestWeaponDamage = weapon->getDamage();
+        }
     }
-    return base;
+    return base + bestWeaponDamage;
 }
 //Inventory
 void Hunter::pickUp(Object* obj) {
@@ -32,6 +36,13 @@ void Hunter::pickUp(Object* obj) {
     if (potion != nullptr) {
         potion->use(this);
         delete potion;
+        return;
+    }
+
+    Armor* armor = dynamic_cast<Armor*>(obj);
+    if (armor != nullptr) {
+        armor->use(this);
+        inventory.push_back(obj);
         return;
     }
     inventory.push_back(obj);

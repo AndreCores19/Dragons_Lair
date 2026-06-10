@@ -44,7 +44,6 @@ bool World::moveHunter(string destination) {
     for (int i = 0; i < regions.getSize(); i++) {
         if (regions.at(i)->getName() == destination) {
             currentRegion = regions.at(i);
-            currentRegion->isVisited();
             return true;
         }
     }
