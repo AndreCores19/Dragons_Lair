@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <cstdlib>
 #include "World.h"
 #include "Hunter.h"
 #include "Logbook.h"
@@ -29,6 +30,8 @@ private:
     bool regionHasDragonsAlive(Region* region) const;
     bool aliveDragonExists() const;
     void manageVillagers(Region* region);
+    double randomDamage(double damage) const;
+    bool probability(int percentage) const;
 
 public:
     Simulation(World* mundo, Hunter* cazador, Logbook* bitacora);
