@@ -22,7 +22,7 @@ bool Menu::fileReadable(const string& path) const {
 
 void Menu::showWelcome() const {
     cout << "======================================" << endl;
-    cout << "           DRAGON'S LAIR              " << endl;
+    cout << "           DRAGONS' LAIR              " << endl;
     cout << "======================================" << endl;
     cout << "Welcome to the adventure." << endl;
     cout << "The program will load regions, dragons," << endl;

@@ -91,7 +91,7 @@ hunter.txt
 ```
 
 These files define the map, enemies, items, villagers, and initial hunter stats.
-
+**Note**: This `data/` folder must be located in the cmake-build-debug folder for the program to run correctly.
 ---
 
 ## Output Files
