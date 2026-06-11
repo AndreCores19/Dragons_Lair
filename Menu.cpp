@@ -1,32 +1,26 @@
-//
-// Created by Gerald Quintero on 8/6/26.
-//
-
 #include "Menu.h"
 #include <memory>
 
-Menu::Menu() : rutaBase("data/") {}
+Menu::Menu() : basePath("data/") {}
 
-string Menu::construirRuta(const string& nombreArchivo) const {
-    if (rutaBase.empty()) {
-        return nombreArchivo;
-    }
+string Menu::buildPath(const string& fileName) const {
+    if (basePath.empty())
+        return fileName;
 
-    char ultimo = rutaBase[rutaBase.size() - 1];
+    char last = basePath[basePath.size() - 1];
 
-    if (ultimo == '/' || ultimo == '\\') {
-        return rutaBase + nombreArchivo;
-    }
+    if (last == '/' || last == '\\')
+        return basePath + fileName;
 
-    return rutaBase + "/" + nombreArchivo;
+    return basePath + "/" + fileName;
 }
 
-bool Menu::archivoLegible(const string& ruta) const {
-    ifstream archivo(ruta);
-    return archivo.good();
+bool Menu::fileReadable(const string& path) const {
+    ifstream file(path);
+    return file.good();
 }
 
-void Menu::mostrarBienvenida() const {
+void Menu::showWelcome() const {
     cout << "======================================" << endl;
     cout << "           DRAGON'S LAIR              " << endl;
     cout << "======================================" << endl;
@@ -36,8 +30,8 @@ void Menu::mostrarBienvenida() const {
     cout << endl;
 }
 
-void Menu::solicitarRutas() {
-    cout << "Current data path: " << rutaBase << endl;
+void Menu::requestPaths() {
+    cout << "Current data path: " << basePath << endl;
     cout << "Expected files:" << endl;
     cout << "- regions.txt" << endl;
     cout << "- dragons.txt" << endl;
@@ -48,19 +42,19 @@ void Menu::solicitarRutas() {
 
     cout << "Do you want to change the base path? (y/n): ";
 
-    char respuesta;
-    cin >> respuesta;
+    char answer;
+    cin >> answer;
 
-    if (respuesta == 'y' || respuesta == 'Y') {
+    if (answer == 'y' || answer == 'Y') {
         cout << "Enter the new base path: ";
-        cin >> rutaBase;
+        cin >> basePath;
     }
 
     cout << endl;
 }
 
-void Menu::validarArchivos() const {
-    const string archivos[] = {
+void Menu::validateFiles() const {
+    const string files[] = {
         "regions.txt",
         "dragons.txt",
         "objects.txt",
@@ -68,32 +62,30 @@ void Menu::validarArchivos() const {
         "villagers.txt",
     };
 
-    for (const string& nombre : archivos) {
-        string rutaCompleta = construirRuta(nombre);
+    for (const string& name : files) {
+        string fullPath = buildPath(name);
 
-        if (!archivoLegible(rutaCompleta)) {
-            throw FileNotFound(rutaCompleta);
-        }
+        if (!fileReadable(fullPath))
+            throw FileNotFound(fullPath);
     }
 }
 
-void Menu::iniciarSimulacion() {
-    mostrarBienvenida();
-    solicitarRutas();
-
-    validarArchivos();
+void Menu::startSimulation() {
+    showWelcome();
+    requestPaths();
+    validateFiles();
 
     cout << "Files validated successfully." << endl;
     cout << "Loading world..." << endl;
 
-    unique_ptr<World> mundo(Reader::readRegions(construirRuta("regions.txt")));
-    Reader::readDragons(construirRuta("dragons.txt"), mundo.get());
-    Reader::readObjects(construirRuta("objects.txt"), mundo.get());
-    Reader::readVillagers(construirRuta("villagers.txt"), mundo.get());
+    unique_ptr<World> world(Reader::readRegions(buildPath("regions.txt")));
+    Reader::readDragons(buildPath("dragons.txt"), world.get());
+    Reader::readObjects(buildPath("objects.txt"), world.get());
+    Reader::readVillagers(buildPath("villagers.txt"), world.get());
 
-    unique_ptr<Hunter> cazador(Reader::readHunter(construirRuta("hunter.txt")));
-    unique_ptr<Logbook> bitacora(new Logbook("logbook.txt"));
+    unique_ptr<Hunter> hunter(Reader::readHunter(buildPath("hunter.txt")));
+    unique_ptr<Logbook> logbook(new Logbook("logbook.txt"));
 
-    Simulation simulacion(mundo.get(), cazador.get(), bitacora.get());
-    simulacion.run();
+    Simulation simulation(world.get(), hunter.get(), logbook.get());
+    simulation.run();
 }

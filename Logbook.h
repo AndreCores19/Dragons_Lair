@@ -1,9 +1,5 @@
-//
-// Created by Gerald Quintero on 7/6/26.
-//
-
-#ifndef DRAGONS_LAIR_BITACORA_H
-#define DRAGONS_LAIR_BITACORA_H
+#ifndef DRAGONS_LAIR_LOGBOOK_H
+#define DRAGONS_LAIR_LOGBOOK_H
 #include <fstream>
 #include <string>
 #include <iomanip>
@@ -12,19 +8,18 @@ using namespace std;
 
 class Logbook {
 private:
-    ofstream archivo;
-    string ruta;
-    int turnoActual;
+    ofstream file;
+    string path;
+    int currentTurn;
 
 public:
-    Logbook(const string& ruta);
+    Logbook(const string& path);
 
-    void setTurno(int turno);
-    void registrar(const string& msg);
-    void cerrar();
+    void setTurn(int turn);
+    void log(const string& msg);
+    void close();
 
-    string getRuta() const;
+    string getPath() const;
 };
 
-
-#endif //DRAGONS_LAIR_BITACORA_H
+#endif //DRAGONS_LAIR_LOGBOOK_H

@@ -15,7 +15,7 @@ void Villager::addItem(Object* item) {
 }
 void Villager::sell(Hunter* hunter, int index) {
     if (hunter == nullptr) return;
-    if (index < 0 || index >= shop.getSize()) { //Verify that the index is valid within the shop
+    if (index < 0 || index >= shop.getSize()) {
         cout << "Invalid item.\n";
         return;
     }

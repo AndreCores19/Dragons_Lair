@@ -9,11 +9,12 @@ int main() {
 
     srand(time(nullptr));
 
-    try {
+    try
+    {
         Menu menu;
-        menu.iniciarSimulacion();
+        menu.startSimulation();
     } catch (const exception& e) {
-        cerr << "Error fatal: " << e.what() << endl;
+        cerr << "Fatal Error: " << e.what() << endl;
         return 1;
     }
     return 0;

@@ -1,180 +1,135 @@
-//
-// Created by Gerald Quintero on 8/6/26.
-//
-
 #include "Simulation.h"
 
-Simulation::Simulation(World* mundo, Hunter* cazador, Logbook* bitacora) : mundo(mundo), cazador(cazador), bitacora(bitacora)
-                                                                           , turnoActual(0), finalizada(false), hydraDerrotada(false){
-    if (mundo == nullptr) {
+Simulation::Simulation(World* world, Hunter* hunter, Logbook* logbook)
+    : world(world), hunter(hunter), logbook(logbook),
+      currentTurn(0), finished(false), hydraDefeated(false) {
+    if (world == nullptr)
         throw BaseError("Simulation received a null world");
-    }
-    if (cazador == nullptr) {
+    if (hunter == nullptr)
         throw BaseError("Simulation received a null hunter");
-    }
-    if (bitacora == nullptr) {
-        throw BaseError("Simulation ");
-    }
-    if (mundo->getCurrentRegion() == nullptr) {
-        throw BaseError("El mundo no tiene una region inicial.");
-    }
+    if (logbook == nullptr)
+        throw BaseError("Simulation received a null logbook");
+    if (world->getCurrentRegion() == nullptr)
+        throw BaseError("The world has no initial region.");
 }
 
-bool Simulation::esDragonFinal(Dragon *dragon) const {
-    if (dragon == nullptr) {
+bool Simulation::isFinalDragon(Dragon* dragon) const {
+    if (dragon == nullptr)
         return false;
-    }
-
     return dragon->GetIsBoss() || dynamic_cast<HydraDragon*>(dragon) != nullptr;
 }
 
-bool Simulation::regionHasDragonsAlive(Region *region) const {
-    if (region == nullptr) {
+bool Simulation::regionHasDragonsAlive(Region* region) const {
+    if (region == nullptr)
         return false;
-    }
-
     const List<Dragon*>& dragons = region->getDragons();
     for (int i = 0; i < dragons.getSize(); i++) {
         Dragon* dragon = dragons.at(i);
-
-        if (dragon != nullptr && dragon->isAlive()) {
+        if (dragon != nullptr && dragon->isAlive())
             return true;
-        }
     }
     return false;
 }
 
 bool Simulation::aliveDragonExists() const {
-    if (mundo == nullptr) {
+    if (world == nullptr)
         return false;
-    }
-
-    const List<Region*>& regions = mundo->getRegions();
+    const List<Region*>& regions = world->getRegions();
     for (int i = 0; i < regions.getSize(); i++) {
         Region* region = regions.at(i);
-
-        if (regionHasDragonsAlive(region)) {
+        if (regionHasDragonsAlive(region))
             return true;
-        }
     }
     return false;
 }
 
-bool Simulation::moverASiguienteRegion(Region* regionActual) {
-    if (regionActual == nullptr) {
+bool Simulation::moveToNextRegion(Region* currentRegion) {
+    if (currentRegion == nullptr)
         return false;
-    }
 
-    const List<string>& conexiones = regionActual->getConnections();
+    const List<string>& connections = currentRegion->getConnections();
 
-    vector<string> noVisitadas;
-    vector<string> conDragonesVivos;
+    vector<string> unvisited;
+    vector<string> withLivingDragons;
 
-    for (int i = 0; i < conexiones.getSize(); i++) {
-        string destino = conexiones.at(i);
-        Region* regionDestino = mundo->findRegionByName(destino);
+    for (int i = 0; i < connections.getSize(); i++) {
+        string destination = connections.at(i);
+        Region* destinationRegion = world->findRegionByName(destination);
 
-        if (regionDestino == nullptr) {
+        if (destinationRegion == nullptr)
             continue;
-        }
 
-        if (!regionDestino->wasVisited()) {
-            noVisitadas.push_back(destino);
-        }
+        if (!destinationRegion->wasVisited())
+            unvisited.push_back(destination);
 
-        if (regionHasDragonsAlive(regionDestino)) {
-            conDragonesVivos.push_back(destino);
-        }
+        if (regionHasDragonsAlive(destinationRegion))
+            withLivingDragons.push_back(destination);
     }
 
-    if (!noVisitadas.empty()) {
-        string destino = noVisitadas[rand() % noVisitadas.size()];
-
-        if (mundo->moveHunter(destino)) {
-            bitacora->registrar(
-                "Hunter " + cazador->getName() + " moves to " + destino + "."
-            );
+    if (!unvisited.empty()) {
+        string destination = unvisited[rand() % unvisited.size()];
+        if (world->moveHunter(destination)) {
+            logbook->log("Hunter " + hunter->getName() + " moves to " + destination + ".");
             return true;
         }
     }
 
-    if (!conDragonesVivos.empty()) {
-        string destino = conDragonesVivos[rand() % conDragonesVivos.size()];
-
-        if (mundo->moveHunter(destino)) {
-            bitacora->registrar(
-                "Hunter " + cazador->getName() +" returns to " + destino + " because there are still living dragons.");
+    if (!withLivingDragons.empty()) {
+        string destination = withLivingDragons[rand() % withLivingDragons.size()];
+        if (world->moveHunter(destination)) {
+            logbook->log("Hunter " + hunter->getName() + " returns to " + destination + " because there are still living dragons.");
             return true;
         }
     }
 
-    if (aliveDragonExists()) {
-        bitacora->registrar(
-            "Hunter " + cazador->getName() +
-            " cannot find a direct path to another living dragon."
-        );
-    } else {
-        bitacora->registrar(
-            "Hunter " + cazador->getName() +
-            " has no remaining dragons to fight."
-        );
-    }
+    if (aliveDragonExists())
+        logbook->log("Hunter " + hunter->getName() + " cannot find a direct path to another living dragon.");
+    else
+        logbook->log("Hunter " + hunter->getName() + " has no remaining dragons to fight.");
 
-    finalizada = true;
+    finished = true;
     return false;
 }
 
-
-void Simulation::manageVillagers(Region *region) {
-    if (region == nullptr) {
+void Simulation::manageVillagers(Region* region) {
+    if (region == nullptr)
         return;
-    }
 
     const List<Villager*>& villagers = region->getVillagers();
-
-    if (villagers.getSize() == 0) {
+    if (villagers.getSize() == 0)
         return;
-    }
 
     for (int i = 0; i < villagers.getSize(); i++) {
         Villager* villager = villagers.at(i);
-
-        if (villager == nullptr) {
+        if (villager == nullptr)
             continue;
-        }
 
-        bitacora->registrar(
-            "Hunter " + cazador->getName() + " meets villager " +
-            villager->getName() + " in " + region->getName() + "."
-        );
+        logbook->log("Hunter " + hunter->getName() + " meets villager " +
+                     villager->getName() + " in " + region->getName() + ".");
 
         if (!probability(60)) {
-            bitacora->registrar("Hunter " + cazador->getName() + " decides not to buy from " + villager->getName() + ".");
+            logbook->log("Hunter " + hunter->getName() + " decides not to buy from " + villager->getName() + ".");
             continue;
         }
 
-        int goldBefore = cazador->getGold();
-        double lifeBefore = cazador->getLife();
+        int goldBefore   = hunter->getGold();
+        double lifeBefore = hunter->getLife();
 
-        villager->sell(cazador, 0);
+        villager->sell(hunter, 0);
 
-        int goldAfter = cazador->getGold();
-        double lifeAfter = cazador->getLife();
+        int goldAfter   = hunter->getGold();
+        double lifeAfter = hunter->getLife();
 
         if (goldAfter < goldBefore) {
             int price = goldBefore - goldAfter;
-
-            bitacora->registrar(
-                "Hunter " + cazador->getName() + " buys an item from " + villager->getName() + " for " + to_string(price) + " gold."
-            );
-            if (lifeAfter > lifeBefore) {
-                bitacora->registrar("Hunter " + cazador->getName() + " recovers " + to_string((int)lifeAfter - lifeBefore) + " life points after using potion.");
-            }
+            logbook->log("Hunter " + hunter->getName() + " buys an item from " +
+                         villager->getName() + " for " + to_string(price) + " gold.");
+            if (lifeAfter > lifeBefore)
+                logbook->log("Hunter " + hunter->getName() + " recovers " +
+                             to_string((int)(lifeAfter - lifeBefore)) + " life points after using potion.");
         } else {
-            bitacora->registrar(
-                "Hunter " + cazador->getName() + " could not buy an item from " +
-                villager->getName() + "."
-            );
+            logbook->log("Hunter " + hunter->getName() + " could not buy an item from " +
+                         villager->getName() + ".");
         }
     }
 }
@@ -190,98 +145,90 @@ bool Simulation::probability(int percentage) const {
 
 void Simulation::run() {
     cout << "Starting simulation..." << endl;
-
-    while (!verificarFinAventura()) {
-        ejecutarTurno();
-    }
-    generarReporte();
-    bitacora->cerrar();
+    while (!checkAdventureEnd())
+        executeTurn();
+    generateReport();
+    logbook->close();
     cout << "Simulation finished. Final report generated in final_report.txt" << endl;
 }
 
-void Simulation::ejecutarTurno() {
-    turnoActual++;
-    bitacora->setTurno(turnoActual);
-    Region* region = mundo->getCurrentRegion();
-    bool primeraVisita = !region->wasVisited();
+void Simulation::executeTurn() {
+    currentTurn++;
+    logbook->setTurn(currentTurn);
+    Region* region = world->getCurrentRegion();
+    bool firstVisit = !region->wasVisited();
 
     if (region == nullptr) {
-        finalizada = true;
-        bitacora->registrar("The simulation stopped because there is no current region.");
+        finished = true;
+        logbook->log("The simulation stopped because there is no current region.");
         return;
     }
 
     region->isVisited();
-    bitacora->registrar("Hunter " + cazador->getName() + " enters " + region->getName() + ".");
-    if (primeraVisita) {
+    logbook->log("Hunter " + hunter->getName() + " enters " + region->getName() + ".");
+
+    if (firstVisit)
         manageVillagers(region);
-    }
-    List<Dragon*>& dragones = const_cast<List<Dragon*>&>(region->getDragons());
 
-    for (int i = 0; i < dragones.getSize(); i++) {
-        Dragon* dragon = dragones.at(i);
+    List<Dragon*>& dragons = const_cast<List<Dragon*>&>(region->getDragons());
 
-        if (dragon == nullptr || !dragon->isAlive()) {
+    for (int i = 0; i < dragons.getSize(); i++) {
+        Dragon* dragon = dragons.at(i);
+        if (dragon == nullptr || !dragon->isAlive())
             continue;
-        }
 
-        double danoCazador = randomDamage(cazador->calculateDamage());
-        dragon->takeDamage(danoCazador);
-        if (danoCazador == 0) {
-            bitacora->registrar("Hunter " + cazador->getName() + " missed the attack!");
-        }
-        else{
-        bitacora->registrar(
-            cazador->getName() + " attacks " + dragon->getName() +
-            " causing " + to_string((int)danoCazador) + " damage.");
+        double hunterDamage = randomDamage(hunter->calculateDamage());
+        dragon->takeDamage(hunterDamage);
 
-        if (!dragon->isAlive()) {
-            bitacora->registrar(dragon->getName() + " was defeated.");
-            int levelBefore = cazador->getLevel();
+        if (hunterDamage == 0) {
+            logbook->log("Hunter " + hunter->getName() + " missed the attack!");
+        } else {
+            logbook->log(hunter->getName() + " attacks " + dragon->getName() +
+                         " causing " + to_string((int)hunterDamage) + " damage.");
 
-            cazador->addExperience(dragon->getLevel() * 50.0);
+            if (!dragon->isAlive()) {
+                logbook->log(dragon->getName() + " was defeated.");
+                int levelBefore = hunter->getLevel();
 
-            if (cazador->getLevel() > levelBefore) {
-                bitacora->registrar("Hunter levels up! - Maximum life increased by 20");
+                hunter->addExperience(dragon->getLevel() * 50.0);
+
+                if (hunter->getLevel() > levelBefore)
+                    logbook->log("Hunter levels up! - Maximum life increased by 20");
+
+                int goldReward = dragon->getLevel() * 25;
+                hunter->addGold(goldReward);
+                logbook->log("Hunter " + hunter->getName() + " earns " +
+                             to_string(goldReward) + " gold for defeating " + dragon->getName() + ".");
+
+                if (isFinalDragon(dragon)) {
+                    hydraDefeated = true;
+                    finished = true;
+                }
+                continue;
             }
-
-            int goldReward = dragon->getLevel() * 25;
-            cazador->addGold(goldReward);
-
-            bitacora->registrar("Hunter " + cazador->getName() + " earns " + to_string(goldReward) + " gold for defeating " + dragon->getName() + ".");
-
-            if (esDragonFinal(dragon)) {
-                hydraDerrotada = true;
-                finalizada = true;
-            }
-            continue;
         }
-    }
 
-        double danoDragon = randomDamage(dragon->calculateDamage());
-        cazador->takeDamage(danoDragon);
-        if (danoDragon == 0) {
-            bitacora->registrar("Hunter " + cazador->getName() + " evaded " + dragon->getName() + "'s attack!");
-        }
-        else {
-            bitacora->registrar(
-          dragon->getName() + " attacks " + cazador->getName() +
-          " causing " + to_string((int)danoDragon) + " damage.");
+        double dragonDamage = randomDamage(dragon->calculateDamage());
+        hunter->takeDamage(dragonDamage);
 
-            if (!cazador->isAlive()) {
-                bitacora->registrar("Hunter " + cazador->getName() + " has died.");
-                finalizada = true;
+        if (dragonDamage == 0) {
+            logbook->log("Hunter " + hunter->getName() + " evaded " + dragon->getName() + "'s attack!");
+        } else {
+            logbook->log(dragon->getName() + " attacks " + hunter->getName() +
+                         " causing " + to_string((int)dragonDamage) + " damage.");
+            if (!hunter->isAlive()) {
+                logbook->log("Hunter " + hunter->getName() + " has died.");
+                finished = true;
                 return;
             }
         }
     }
 
-    List<Object*>& objetos = const_cast<List<Object*>&>(region->getObjects());
-
+    List<Object*>& objects = const_cast<List<Object*>&>(region->getObjects());
     int index = 0;
 
-    while (index < objetos.getSize()) {
-        Object* object = objetos.at(index);
+    while (index < objects.getSize()) {
+        Object* object = objects.at(index);
         if (object == nullptr) {
             index++;
             continue;
@@ -289,75 +236,65 @@ void Simulation::ejecutarTurno() {
 
         Weapon* weapon = dynamic_cast<Weapon*>(object);
         if (weapon != nullptr) {
-            Object* objectPicked = region->removeObject(index);
-            cazador->pickUp(objectPicked);
-            bitacora->registrar("Hunter " + cazador->getName() + " picks up weapon " + objectPicked->getName() + ".");
-        }
-        else {
-            bitacora->registrar("Hunter " + cazador->getName() + " ignores " + object->getName() + ".");
+            Object* pickedObject = region->removeObject(index);
+            hunter->pickUp(pickedObject);
+            logbook->log("Hunter " + hunter->getName() + " picks up weapon " + pickedObject->getName() + ".");
+        } else {
+            logbook->log("Hunter " + hunter->getName() + " ignores " + object->getName() + ".");
             index++;
         }
     }
 
-    if (!finalizada) {
-        if (regionHasDragonsAlive(region)) {
-            bitacora->registrar("Hunter " + cazador->getName() + " stays in " + region->getName() + " because there are still living dragons.");
-        }
-        else {
-            moverASiguienteRegion(region);
-        }
+    if (!finished) {
+        if (regionHasDragonsAlive(region))
+            logbook->log("Hunter " + hunter->getName() + " stays in " + region->getName() + " because there are still living dragons.");
+        else
+            moveToNextRegion(region);
     }
 }
 
-bool Simulation::verificarFinAventura() {
-    if (finalizada) {
+bool Simulation::checkAdventureEnd() {
+    if (finished)
+        return true;
+    if (hunter == nullptr || !hunter->isAlive()) {
+        finished = true;
         return true;
     }
-
-    if (cazador == nullptr || !cazador->isAlive()) {
-        finalizada = true;
+    if (hydraDefeated) {
+        finished = true;
         return true;
     }
-
-    if (hydraDerrotada) {
-        finalizada = true;
-        return true;
-    }
-
-    if (mundo == nullptr || mundo->getCurrentRegion() == nullptr) {
-        finalizada = true;
+    if (world == nullptr || world->getCurrentRegion() == nullptr) {
+        finished = true;
         return true;
     }
     return false;
 }
 
-void Simulation::generarReporte() {
-    ofstream reporte("final_report.txt", ios::out);
-
-    if (!reporte.is_open()) {
+void Simulation::generateReport() {
+    ofstream report("final_report.txt", ios::out);
+    if (!report.is_open())
         throw BaseError("Could not create final_report.txt.");
-    }
 
-    reporte << "===== FINAL REPORT - DRAGON'S LAIR =====" << endl;
-    reporte << "Turns executed: " << turnoActual << endl;
-    reporte << "Logbook file: " << bitacora->getRuta() << endl;
-    reporte << endl;
-    reporte << "Final hunter status:" << endl;
-    reporte << "Name: " << cazador->getName() << endl;
-    reporte << "Life: " << cazador->getLife() << " / " << cazador->getMaxLife() << endl;
-    reporte << "Level: " << cazador->getLevel() << endl;
-    reporte << "Gold: " << cazador->getGold() << endl;
-    reporte << "Experience: " << cazador->getExperience() << endl;
-    reporte << endl;
-    reporte << "Result: ";
+    report << "===== FINAL REPORT - DRAGON'S LAIR =====" << endl;
+    report << "Turns executed: " << currentTurn << endl;
+    report << "Logbook file: " << logbook->getPath() << endl;
+    report << endl;
+    report << "Final hunter status:" << endl;
+    report << "Name: "       << hunter->getName()       << endl;
+    report << "Life: "       << hunter->getLife() << " / " << hunter->getMaxLife() << endl;
+    report << "Level: "      << hunter->getLevel()      << endl;
+    report << "Gold: "       << hunter->getGold()       << endl;
+    report << "Experience: " << hunter->getExperience() << endl;
+    report << endl;
+    report << "Result: ";
 
-    if (hydraDerrotada) {
-        reporte << "Victory. The hunter defeated the Hydra." << endl;
-    } else if (!cazador->isAlive()) {
-        reporte << "Defeat. The hunter died during the adventure." << endl;
-    } else {
-        reporte << "Adventure finished. There are no available movements." << endl;
-    }
+    if (hydraDefeated)
+        report << "Victory. The hunter defeated the Hydra." << endl;
+    else if (!hunter->isAlive())
+        report << "Defeat. The hunter died during the adventure." << endl;
+    else
+        report << "Adventure finished. There are no available movements." << endl;
 
-    reporte.close();
+    report.close();
 }

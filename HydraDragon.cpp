@@ -17,11 +17,10 @@ void HydraDragon::specialAbility(Character* target) {
     if (heads > 1) {
         heads--;
         double healAmount = maxLife * 0.15;
-        life = min(life + healAmount, (double)maxLife); //It heals itself, but without exceeding the maximum
+        life = min(life + healAmount, (double)maxLife);
         cout << name << " regenerates! One head cut off, " << heads << " remaining.\n";
         cout << name << " healed for " << healAmount << " HP!\n";
     } else {
-        //last head, unleash desperation attack
         if (target == nullptr || !target->isAlive()) return;
         double desperation = calculateDamage() * 2.0;
         target->takeDamage(desperation);

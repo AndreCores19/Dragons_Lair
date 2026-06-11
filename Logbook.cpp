@@ -1,35 +1,31 @@
-//
-// Created by Gerald Quintero on 7/6/26.
-//
-
 #include "Logbook.h"
 
-Logbook::Logbook(const string& ruta) : ruta(ruta), turnoActual(0) {
-    archivo.open(ruta, ios::out);
+Logbook::Logbook(const string& path) : path(path), currentTurn(0) {
+    file.open(path, ios::out);
 
-    if (!archivo.is_open()) {
-        throw FileNotFound(ruta);
+    if (!file.is_open()) {
+        throw FileNotFound(path);
     }
 }
 
-void Logbook::setTurno(int turno) {
-    turnoActual = turno;
+void Logbook::setTurn(int turn) {
+    currentTurn = turn;
 }
 
-void Logbook::registrar(const string &msg) {
-    if (!archivo.is_open()) {
-        throw FileNotFound(ruta);
+void Logbook::log(const string& msg) {
+    if (!file.is_open()) {
+        throw FileNotFound(path);
     }
 
-    archivo << "[Turn " << setw(2) << setfill('0') << turnoActual << "] " << msg << endl;
+    file << "[Turn " << setw(2) << setfill('0') << currentTurn << "] " << msg << endl;
 }
 
-void Logbook::cerrar() {
-    if (archivo.is_open()) {
-        archivo.close();
+void Logbook::close() {
+    if (file.is_open()) {
+        file.close();
     }
 }
 
-string Logbook::getRuta() const {
-    return ruta;
+string Logbook::getPath() const {
+    return path;
 }

@@ -11,7 +11,7 @@ double PoisonDragon::calculateDamage() const {
 void PoisonDragon::specialAbility(Character* target) {
     if (target == nullptr || !target->isAlive())
         return;
-    poisonStacks += toxicity * 0.2; //poisonStacks goes up and accumulates poison for future turns
+    poisonStacks += toxicity * 0.2;
     double poisonDamage = poisonStacks;
     target->takeDamage(poisonDamage);
     cout << name << " releases a toxic cloud! " << target->getName() << " is poisoned for " << poisonDamage << " damage! (stacks: " << poisonStacks << ")\n";

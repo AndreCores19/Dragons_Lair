@@ -1,9 +1,5 @@
-//
-// Created by Gerald Quintero on 8/6/26.
-//
-
-#ifndef DRAGONS_LAIR_SIMULACION_H
-#define DRAGONS_LAIR_SIMULACION_H
+#ifndef DRAGONS_LAIR_SIMULATION_H
+#define DRAGONS_LAIR_SIMULATION_H
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -15,18 +11,19 @@
 #include "HydraDragon.h"
 #include "BaseError.h"
 #include "Weapon.h"
+#include <vector>
 using namespace std;
 
 class Simulation {
 private:
-    World* mundo;
-    Hunter* cazador;
-    Logbook* bitacora;
-    int turnoActual;
-    bool finalizada;
-    bool hydraDerrotada;
-    bool esDragonFinal(Dragon* dragon) const;
-    bool moverASiguienteRegion(Region* regionActual);
+    World* world;
+    Hunter* hunter;
+    Logbook* logbook;
+    int currentTurn;
+    bool finished;
+    bool hydraDefeated;
+    bool isFinalDragon(Dragon* dragon) const;
+    bool moveToNextRegion(Region* currentRegion);
     bool regionHasDragonsAlive(Region* region) const;
     bool aliveDragonExists() const;
     void manageVillagers(Region* region);
@@ -34,14 +31,12 @@ private:
     bool probability(int percentage) const;
 
 public:
-    Simulation(World* mundo, Hunter* cazador, Logbook* bitacora);
+    Simulation(World* world, Hunter* hunter, Logbook* logbook);
 
     void run();
-    void ejecutarTurno();
-    bool verificarFinAventura();
-    void generarReporte();
-
+    void executeTurn();
+    bool checkAdventureEnd();
+    void generateReport();
 };
 
-
-#endif //DRAGONS_LAIR_SIMULACION_H
+#endif //DRAGONS_LAIR_SIMULATION_H

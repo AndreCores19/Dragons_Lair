@@ -14,7 +14,6 @@ bool Armor::isEquipped() const {
     return equipped;
 }
 void Armor::use(Character* target) {
-    //dynamic_cast checks if target is actually a Hunter
     Hunter* hunter = dynamic_cast<Hunter*>(target);
     if (hunter == nullptr)
         return;

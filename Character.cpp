@@ -26,7 +26,7 @@ void Character::setDefense(double def) {
 }
 void Character::attack(Character* target) {
     if (target == nullptr || !target->isAlive()) return;
-    double dmg = calculateDamage();  //each subclass defines how much
+    double dmg = calculateDamage();
     target->takeDamage(dmg);
 }
 void Character::takeDamage(double dmg) {
